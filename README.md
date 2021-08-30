@@ -4,7 +4,19 @@ Electron app that allows you to create custom calculators!
 
 ![demo showing a damage calculation](images/demo.png)
 
-## Syntax
+## Running
+
+Run dev server:
+```
+npm run server
+```
+
+Build to native apps:
+```
+npm run dist
+```
+
+## Usage and Syntax
 
 Generate an output node called `Damage`, and two input nodes `Damage per Shot` and `Fire Rate`:
 ```

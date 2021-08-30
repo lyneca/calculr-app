@@ -1,12 +1,8 @@
 {
-    "name": "electron-react-ts-starter",
+    "name": "calculr",
     "version": "0.1.0",
-    "description": "A simple Electron, React, Typescript, hot-reloading app with detailed documentation.",
-    "author": {
-        "name": "Matthew Russell",
-        "email": "mbr4477@gmail.com",
-        "url": "https://mruss.dev"
-    },
+    "description": "An election app that creates custom calculators",
+    "author": "lyneca",
     "main": "./dist/main/main.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
@@ -45,8 +41,8 @@
         "react-dom": "^16.8.6"
     },
     "build": {
-        "appId": "dev.mruss.electron-react-ts-hot",
-        "productName": "EaRTH",
+        "appId": "dev.lyneca.calculr",
+        "productName": "Calculr",
         "directories": {
             "buildResources": "build-resources",
             "output": "build"
