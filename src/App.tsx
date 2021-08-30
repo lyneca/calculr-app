@@ -72,19 +72,6 @@ class InputField extends React.Component<InputProps, any> {
     }
 }
 
-type DisplayProps = { blocks: any[], overrides: any };
-class Display extends React.Component<DisplayProps, any> {
-    constructor(props: DisplayProps) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className="display">{this.props.blocks}</div>
-        )
-    }
-}
-
 function isNumeric(str: any) {
   if (typeof str != "string") return false // we only process strings!  
   return !isNaN(str as unknown as number) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
@@ -143,6 +130,7 @@ class App extends React.Component<any, State> {
     renderBlocks = (text: string, overrides?: any) => {
         let blocks: any[] = [];
         let values: any = {};
+        let newOverrides: any = {};
         text.split('\n').forEach(line => {
             let row: any[] = [];
             line.split(';').forEach(segment => {
@@ -151,11 +139,15 @@ class App extends React.Component<any, State> {
                 if (match = segment.match(/(?<label>[\w_]+)\s*=\s*(?<expr>.+)/)) {
                     this.freeLabels(blocks, match.groups.expr).forEach(label => {
                         blocks.push([{label: label, mode: "input"}]);
+                        if (overrides.hasOwnProperty(label)) newOverrides[label] = overrides[label];
+                        else newOverrides[label] = 0;
                     });
                     values[match.groups.label] = this.eval(values, match.groups.label, match.groups.expr, overrides);
                     row.push({label: match.groups.label, mode: "value", value: values[match.groups.label]});
                 } else if (match = segment.match(/^\$(?<label>[\w_]+)%?$/)) {
                     row.push({label: match.groups.label, mode: "input", percent: match[0].endsWith('%') });
+                    if (overrides.hasOwnProperty(match.groups.label)) newOverrides[match.groups.label] = overrides[match.groups.label];
+                    else newOverrides[match.groups.label] = 0;
                 } else if (match = segment.match(/---/)) {
                     row.push({ mode: "separator" });
                 } else if (match = segment.match(/^(?<count>#+)\s*(?<title>.+)$/)) {
@@ -165,8 +157,7 @@ class App extends React.Component<any, State> {
             if (row.length > 0)
                 blocks.push(row);
         });
-        console.log(blocks);
-        return { blocks };
+        return { blocks, overrides: newOverrides };
     }
 
 
