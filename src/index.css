@@ -1,0 +1,129 @@
+body, html {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    font-family: 'Roboto Slab', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+div.block-row {
+    display: flex;
+}
+
+div.block-row:not(:first-of-type) {
+    margin-top: 10px;
+}
+
+div.block {
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 5px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #dddddd;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-width: 0px;
+}
+
+div.block:not(:first-of-type) {
+    margin-left: 10px;
+}
+
+div.block div.title {
+    font-style: italic;
+    text-transform: uppercase;
+    padding: 5px;
+    font-size: 10px;
+    color: #555555;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    grid-gap: 10px;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+textarea.program-input {
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1) inset;
+    justify-self: stretch;
+    align-self: stretch;
+    resize: none;
+    flex-grow: 1;
+    border: 0;
+    background-color: #dddddd;
+    border-radius: 5px;
+    padding: 15px;
+    outline: none !important;
+    font-family: 'Fira Code', 'Inconsolata', 'Consolas', 'Courier New', Courier, monospace;
+    font-size: 15px;
+}
+
+div.display {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+div.result::before {
+    content: "= ";
+    color: #aaaaaa;
+}
+div.result {
+    font-family: 'Fira Code', 'Inconsolata', 'Consolas', 'Courier New', Courier, monospace;
+    margin: 5px;
+    margin-top: 0;
+    background-color: #eeeeee;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #bbbbbb;
+}
+input.number-input {
+    font-family: 'Fira Code', 'Inconsolata', 'Consolas', 'Courier New', Courier, monospace;
+    margin: 5px;
+    margin-top: 0;
+    font-size: inherit;
+    background-color: #eeeeee;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px dashed #bbbbbb;
+}
+
+.percent {
+    font-family: 'Fira Code', 'Inconsolata', 'Consolas', 'Courier New', Courier, monospace;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    opacity: 0.5;
+}
+
+div.sep {
+    background-color: #cccccc;
+}
+div.hsep {
+    background-color: #cccccc;
+    height: 1px;
+    flex-grow: 1;
+}
+
+div.h1, div.h2, div.h3, div.h4, div.h5, div.h6 {
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 5px;
+    padding-top: 10px;
+    text-align: center;
+}
+div.h1 { font-size: 4vw; }
+div.h2 { font-size: 3.5vw; }
+div.h3 { font-size: 3vw; }
+div.h4 { font-size: 2.5vw; }
+div.h5 { font-size: 2vw; }
+div.h6 { font-size: 1.5vw; }
