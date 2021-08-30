@@ -1,5 +1,9 @@
 # Calculr
 
+Electron app that allows you to create custom calculators!
+
+![demo showing a damage calculation](images/demo.png)
+
 ## Syntax
 
 Generate an output node called `Damage`, and two input nodes `Damage per Shot` and `Fire Rate`:
