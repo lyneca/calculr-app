@@ -1,4 +1,6 @@
 body, html {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
     padding: 0;
     margin: 0;
     height: 100%;
@@ -7,6 +9,7 @@ body, html {
 
 div.block-row {
     display: flex;
+    -webkit-app-region: none;
 }
 
 div.block-row:not(:first-of-type) {
@@ -52,6 +55,8 @@ textarea.program-input {
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1) inset;
     justify-self: stretch;
     align-self: stretch;
+    -webkit-user-select: text;
+    -webkit-app-region: none;
     resize: none;
     flex-grow: 1;
     border: 0;

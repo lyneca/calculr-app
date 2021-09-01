@@ -86,9 +86,10 @@ class App extends React.Component<any, State> {
     }
 
     parse = (expr: string) => {
-        expr = expr.replace(/([^\w_])?sin\(/g, (_, prefix) => prefix ?? "" + " Math.sin(");
-        expr = expr.replace(/([^\w_])?cos\(/g, (_, prefix) => prefix ?? "" + " Math.cos(");
-        expr = expr.replace(/([^\w_])?tan\(/g, (_, prefix) => prefix ?? "" + " Math.tan(");
+        expr = expr.replace(/(Math\.)?sin\(/g, "Math.sin(");
+        expr = expr.replace(/(Math\.)?cos\(/g, "Math.cos(");
+        expr = expr.replace(/(Math\.)?tan\(/g, "Math.tan(");
+        expr = expr.replace(/(Math\.)?sqrt\(/g, "Math.sqrt(");
         return expr;
     }
 
@@ -104,7 +105,6 @@ class App extends React.Component<any, State> {
                 if (overrides != undefined) {
                     let override = overrides[label];
                     if (override != null && override != undefined) {
-                        console.log(`${label} override: ${override}`);
                         value = override.toString();
                     }
                 }
@@ -118,13 +118,13 @@ class App extends React.Component<any, State> {
             else
                 return '0';
         } catch (e) {
-            console.log(e);
+            //console.log(e);
             return 0;
         }
     }
 
     freeLabels = (blocks: any, expr: string) => {
-        return Array.from(expr.matchAll(/\$(?<label>[\w_]+)/g)).filter(match => blocks.filter((row: any) => row.filter((block: any) => block.label == match.groups?.label).length > 0).length == 0).map(match => match[0].substr(1));
+        return Array.from(new Set<any>(Array.from(expr.matchAll(/\$(?<label>[\w_]+)/g)).filter(match => blocks.filter((row: any) => row.filter((block: any) => block.label == match.groups?.label).length > 0).length == 0).map(match => match[0].substr(1))));
     }
 
     renderBlocks = (text: string, overrides?: any) => {
@@ -173,7 +173,6 @@ class App extends React.Component<any, State> {
 
     makeRow = (row: any, i: number) => {
         let j: number = 0;
-        console.log(row);
         return <div className='block-row' key={i}>{row.map((block: any) => this.makeBlock(block, j++))}</div>;
     }
 
@@ -191,7 +190,6 @@ class App extends React.Component<any, State> {
     }
 
     render = () => {
-        console.log(this.state);
         let i = 0;
         return (
             <main className="app">

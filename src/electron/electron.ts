@@ -40,7 +40,7 @@ function createWindow() {
                         label: process.platform === 'darwin' ? 'Quit' : 'Close',
                         accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
                         role: 'quit'
-                    }
+                    },
                 ]
             },
             {
