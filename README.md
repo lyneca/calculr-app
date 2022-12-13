@@ -1,70 +1,48 @@
+# Calculr
 
-![ElectronJS + Typescript + ReactJS](https://user-images.githubusercontent.com/46914545/159979537-7116a826-212c-45f4-a393-4abeabeabd07.jpg)
+Electron app that allows you to create custom calculators!
 
-## Electron + TypeScript + React
+![demo showing a damage calculation](images/demo.png)
 
-This boilerplate is using [diego3g/electron-typescript-react](https://github.com/diego3g/electron-typescript-react) as base.
-If you want something with styled-components, linting and tests with jest, just go there. 
+## Running
 
-### Differences between this boilerplate and the diego3g's version
-* css support added
-* svg support added
-* jest removed
-* eslint removed
-* styled-components removed
-
-The idea of this boilerplate is to be as simple as it can using this three technologies. My thought is to give the developer maximum freedom to choose their own way to write code.
-
-## Installation
-Download this boilerplate using 
-```bash
-git clone https://github.com/caiulucas/basic-electron-react-typescript
+Run dev server:
 ```
-or click on the `Use this template` option.
-
-Add `node_modules` in your project
-
-Using npm: 
-```bash
-npm install
+npm start
 ```
 
-Using yarn:
-```bash
-yarn
+Build to native Windows app:
+```
+npm run make
 ```
 
-## Usage
+## Usage and Syntax
 
-Just run `start` script.
-
-Using npm:
-```bash
-npm run start
+Generate an output node called `Damage`, and two input nodes `Damage per Shot` and `Fire Rate`:
 ```
-Using yarn:
-```bash
-yarn start
+damage = $damage_per_shot * $fire_rate
 ```
 
-## Packaging
-
-To generate the project package based on the OS you're running on, just run:
-
-Using npm:
-```bash
-npm run package
+Or declare the input nodes first and stack them horizontally on the same row:
+```
+$damage_per_shot; $fire_rate
+damage = $damage_per_shot * $fire_rate
 ```
 
-Using yarn:
-```bash
-yarn package
+Headings and horizontal lines - h1 to h6:
 ```
-## Contributing
-Any pull request or issue is welcome. If you have any idea for this boilerplate, feel free to share it.
+# Damage Calculator
+---
+$damage_per_shot; $fire_rate
+damage = $damage_per_shot * $fire_rate
+```
 
-If you want to make your own boilerplate using this project as base, just go for it 😃
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
+Percentage nodes like `$discount%` auto-divide their input by 100, and show a `%` symbol on them. Currency nodes like `$price$` show a `$` symbol.
+```
+# Discount Calculator
+---
+$price$; $discount%
+discounted_price$ = $price * (1 - $discount)
+```
+_e.g. 30 becomes 0.3_
+![demo showing a damage calculation](images/modifiers.png)
