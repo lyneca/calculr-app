@@ -1,12 +1,12 @@
 {
-  "name": "basic-electron-react-typescript",
-  "author": "Caio Lucas <lienscarlet@gmail.com>",
+  "name": "calculr",
+  "author": "Luke Tuthill <lukemtuthill@gmail.com>",
   "version": "1.0.0",
-  "description": "Boilerplate using Electron + TypeScript + React.",
-  "main": "./.webpack/main/index.js",
+  "description": "A programmable, dynamic calculator",
+  "main": "./.webpack/main",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
+    "package": "electron-forge package -p",
     "make": "electron-forge make",
     "release": "electron-forge publish"
   },
@@ -47,8 +47,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "name": "Electron starter",
-        "executableName": "electron-starter",
+        "name": "Calculr",
+        "executableName": "calculr",
         "icon": "assets/icon",
         "extraResource": [
           "assets"
@@ -79,7 +79,8 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "Electron Starter"
+            "name": "Calculr",
+            "description": "A programmable, modular calculator"
           }
         },
         {

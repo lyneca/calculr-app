@@ -15,8 +15,8 @@ function createWindow () {
     // icon: path.join(assetsPath, 'assets', 'icon.png'),
     width: 1100,
     height: 700,
-    backgroundColor: '#ffffff',
     frame: false, 
+    transparent: true,
     minWidth: 700,
     resizable: true,
     webPreferences: {

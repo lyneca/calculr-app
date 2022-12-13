@@ -41,7 +41,7 @@ class InputBlock extends React.Component<InputBlockProps, InputBlockState> {
 
     handleChange(event: any) {
         let value = parseFloat(event.target.value);
-        if (value === NaN || value === undefined || value === null) value = 0;
+        if (Number.isNaN(value) || value === undefined || value === null) value = 0;
         this.setState({value});
         this.props.onChange(value);
     }
@@ -62,6 +62,23 @@ class InputBlock extends React.Component<InputBlockProps, InputBlockState> {
     }
 }
 
+const example = `# Math Stuff
+
+---
+
+### Quadratic Equation
+
+$a ; $b ; $c
+
+x_1 = (-$b + sqrt(pow($b, 2) - 4 * $a * $c)) / 2 * $a ; x_2 = (-$b - sqrt(pow($b, 2) - 4 * $a * $c)) / 2 * $a
+
+---
+
+### Compound Interest
+$principal$ ; $rate% ; $frequency
+
+$years ; total_accumulated$ = $principal * pow(1 + $rate / $frequency, $frequency * $years)`
+
 type InputProps = { program: string, onValueChange: any };
 class InputField extends React.Component<InputProps, any> {
     constructor(props: InputProps) {
@@ -74,7 +91,7 @@ class InputField extends React.Component<InputProps, any> {
     }
     render() {
         return (
-            <textarea className="program-input" value={this.props.program} onChange={this.handleChange} />
+            <textarea placeholder={example} className="program-input" value={this.props.program} onChange={this.handleChange} />
         );
     }
 }
@@ -100,11 +117,30 @@ class App extends React.Component<any, State> {
         expr = expr.replace(/(Math\.)?cos\(/g, "Math.cos(");
         expr = expr.replace(/(Math\.)?tan\(/g, "Math.tan(");
         expr = expr.replace(/(Math\.)?sqrt\(/g, "Math.sqrt(");
+        expr = expr.replace(/(Math\.)?pow\(/g, "Math.pow(");
         return expr;
     }
 
     eval = (values: any, thisLabel: string, expr: string, overrides?: any) => {
         if (expr == null || expr == undefined || expr.match(/^\s*$/)) return 0;
+        let string = this.parse(expr.replace(/\$\w+/g, (text: string) => {
+                let label = text.substr(1);
+                let value: number = 0;
+                if (label != thisLabel) 
+                    value = values[label];
+                if (value === null || value === undefined) value = 0;
+                if (overrides != undefined) {
+                    let override = overrides[label];
+                    if (override != null && override != undefined) {
+                        value = override.toString();
+                    }
+                }
+                if (isNumeric(value.toString()))
+                    return value.toString();
+                else
+                    return '0';
+            }));
+        console.log(`Evaluating ${string}`)
         try {
             let value = eval(this.parse(expr.replace(/\$\w+/g, (text: string) => {
                 let label = text.substr(1);
@@ -128,7 +164,7 @@ class App extends React.Component<any, State> {
             else
                 return '0';
         } catch (e) {
-            //console.log(e);
+            console.log(e);
             return 0;
         }
     }
