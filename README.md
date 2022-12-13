@@ -37,6 +37,12 @@ $damage_per_shot; $fire_rate
 damage = $damage_per_shot * $fire_rate
 ```
 
+The code is `eval()`uated as normal JS, with a few abbreviations in.
+
+```js
+x = sin($y) ; z = pow($w, 2)
+```
+
 Percentage nodes like `$discount%` auto-divide their input by 100, and show a `%` symbol on them. Currency nodes like `$price$` show a `$` symbol.
 ```
 # Discount Calculator
