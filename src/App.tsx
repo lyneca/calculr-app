@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-type ValueBlockProps = { title: string, value: number, type: InputType };
+type ValueBlockProps = { title: string, value: number, type: InputType, success: boolean };
 type ValueBlockState = { value: number };
 class ValueBlock extends React.Component<ValueBlockProps, ValueBlockState> {
     constructor(props: ValueBlockProps) {
@@ -14,10 +14,11 @@ class ValueBlock extends React.Component<ValueBlockProps, ValueBlockState> {
     }
 
     render() {
+        let value = Math.round((this.props.value + Number.EPSILON) * 100) / (this.props.type == InputType.PERCENT ? 1 : 100);
         return (
             <div className="block">
             <div className="title">{this.title()}</div>
-            <div className="result"><span className="prefix">{this.props.type == InputType.CURRENCY ? "$" : ""}</span>{Math.round(this.props.value * 100) / 100 * (this.props.type == InputType.PERCENT ? 100 : 1)}<span className="suffix">{(this.props.type == InputType.PERCENT ? "%" : "")}</span></div>
+            <div className={"result " + (this.props.success ? "" : "error" )}><span className="prefix">{this.props.type == InputType.CURRENCY ? "$" : ""}</span>{value}<span className="suffix">{(this.props.type == InputType.PERCENT ? "%" : "")}</span></div>
             </div>
         );
     }
@@ -103,6 +104,10 @@ function isNumeric(str: any) {
          !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
 }
 
+const replacements = [
+    "floor", "ceil", "round", "sin", "cos", "tan", "sqrt", "pow"
+]
+
 type State = { program: string, blocks: any[], overrides: any, layout: any[] };
 class App extends React.Component<any, State> {
     constructor(props: any) {
@@ -111,19 +116,14 @@ class App extends React.Component<any, State> {
     }
 
     parse = (expr: string) => {
-        expr = expr.replace(/(Math\.)?floor\(/g, "Math.floor(");
-        expr = expr.replace(/(Math\.)?ceil\(/g, "Math.ceil(");
-        expr = expr.replace(/(Math\.)?round\(/g, "Math.round(");
-        expr = expr.replace(/(Math\.)?sin\(/g, "Math.sin(");
-        expr = expr.replace(/(Math\.)?cos\(/g, "Math.cos(");
-        expr = expr.replace(/(Math\.)?tan\(/g, "Math.tan(");
-        expr = expr.replace(/(Math\.)?sqrt\(/g, "Math.sqrt(");
-        expr = expr.replace(/(Math\.)?pow\(/g, "Math.pow(");
+        replacements.forEach(replacement => {
+            expr = expr.replace(new RegExp(`${replacement}\\(`, 'g'), `Math.${replacement}(`, );
+        })
         return expr;
     }
 
     eval = (values: any, thisLabel: string, expr: string, overrides?: any) => {
-        if (expr == null || expr == undefined || expr.match(/^\s*$/)) return 0;
+        if (expr == null || expr == undefined || expr.match(/^\s*$/)) return { success: false, value: 0 };
         let string = this.parse(expr.replace(/\$\w+/g, (text: string) => {
                 let label = text.substr(1);
                 let value: number = 0;
@@ -141,32 +141,15 @@ class App extends React.Component<any, State> {
                 else
                     return '0';
             }));
-        console.log(`Evaluating ${string}`)
         try {
-            let value = eval(this.parse(expr.replace(/\$\w+/g, (text: string) => {
-                let label = text.substr(1);
-                let value: number = 0;
-                if (label != thisLabel) 
-                    value = values[label];
-                if (value === null || value === undefined) value = 0;
-                if (overrides != undefined) {
-                    let override = overrides[label];
-                    if (override != null && override != undefined) {
-                        value = override.toString();
-                    }
-                }
-                if (isNumeric(value.toString()))
-                    return value.toString();
-                else
-                    return '0';
-            })));
+            let value = eval(string);
             if (isNumeric(value.toString()))
-                return value.toString();
+                return {success: true, value };
             else
-                return '0';
+                return {success: false, value: 0 };
         } catch (e) {
-            console.log(e);
-            return 0;
+            //console.log(e);
+            return {success: false, value: 0}
         }
     }
 
@@ -206,8 +189,10 @@ class App extends React.Component<any, State> {
                         if (overrides.hasOwnProperty(label)) newOverrides[label] = overrides[label];
                         else newOverrides[label] = 0;
                     });
-                    values[match.groups.label] = this.eval(values, match.groups.label, match.groups.expr, {...overrides, ...newOverrides});
-                    row.push({label: match.groups.label, mode: "value", value: values[match.groups.label], type: this.detectInputType(match.groups.type)});
+                    let value, success;
+                    ({ value, success } = this.eval(values, match.groups.label, match.groups.expr, {...overrides, ...newOverrides}));
+                    values[match.groups.label] = value;
+                    row.push({label: match.groups.label, success, mode: "value", value: values[match.groups.label], type: this.detectInputType(match.groups.type)});
                 } else if (match = segment.match(/^\$(?<label>[\w_]+)[%$]?$/)) {
                     row.push({
                         label: match.groups.label,
@@ -249,7 +234,7 @@ class App extends React.Component<any, State> {
             case "input":
                 return <InputBlock key={block.label + i} title={block.label} type={block.type} onChange={(value: number) => this.onInputChange(block.label, value, block.type)} />
             case "value":
-                return <ValueBlock key={block.label + i} value={block.value} title={block.label} type={block.type} />
+                return <ValueBlock key={block.label + i} value={block.value} title={block.label} type={block.type} success={block.success} />
             case "separator":
                 return <div className="hsep" key={i}></div>;
             case "title":
